@@ -73,9 +73,9 @@ fn main() {
 		None => ".".to_string()
 	};
 
-	let port: String = match matches.opt_str("p") {
-		Some(p) => p,
-		None => "8080".to_string()
+	let port: u16 = match matches.opt_str("p") {
+		Some(p) => p.parse::<u16>().unwrap(),
+		None => 8080
 	};
 
 	let time_response: bool = match matches.opt_str("t") {
@@ -83,5 +83,5 @@ fn main() {
 		None => true
 	};
 
-	serve_at(&dir, port.parse::<u16>().unwrap(), time_response);
+	serve_at(&dir, port, time_response);
 }
