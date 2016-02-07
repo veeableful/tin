@@ -1,0 +1,10 @@
+[package]
+name = "tin"
+version = "0.0.1"
+authors = ["Lilis Iskandar <veeableful@gmail.com>"]
+
+[dependencies]
+getopts = "0.2.14"
+iron = "0.2.6"
+staticfile = "0.1.0"
+time = "0.1.34"
