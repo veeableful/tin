@@ -36,13 +36,18 @@ fn print_usage(program: &str, opts: Options) {
 	print!("{}", opts.usage(&brief));
 }
 
-fn serve_at(dir: &str, port: u16) {
-	let mut chain = Chain::new(Static::new(Path::new(dir)));
-	chain.link_before(ResponseTime);
-	chain.link_after(ResponseTime);
-
+fn serve_at(dir: &str, port: u16, time_response: bool) {
+	let static_handler = Static::new(Path::new(dir));
 	println!("Serving at localhost:{}", port);
-	Iron::new(chain).http(("localhost", port)).unwrap();
+
+	if time_response {
+		let mut chain = Chain::new(static_handler);
+		chain.link_before(ResponseTime);
+		chain.link_after(ResponseTime);
+		Iron::new(chain).http(("localhost", port)).unwrap();
+	} else {
+		Iron::new(static_handler).http(("localhost", port)).unwrap();
+	}
 }
 
 fn main() {
@@ -52,6 +57,7 @@ fn main() {
 	let mut opts = Options::new();
 	opts.optopt("d", "directory", "directory that contains the website", "DIR");
 	opts.optopt("p", "port", "server port number", "PORT");
+	opts.optopt("t", "time", "should server time responses?", "true/false");
 	opts.optflag("h", "help", "print this help menu");
 	let matches = match opts.parse(&args[1..]) {
 		Ok(m) => { m }
@@ -72,5 +78,10 @@ fn main() {
 		None => "8080".to_string()
 	};
 
-	serve_at(&dir, port.parse::<u16>().unwrap());
+	let time_response: bool = match matches.opt_str("t") {
+		Some(p) => !(p == "false"), // prefer 'true' unless 'false' is spelled correctly
+		None => true
+	};
+
+	serve_at(&dir, port.parse::<u16>().unwrap(), time_response);
 }
