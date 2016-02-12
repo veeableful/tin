@@ -4,7 +4,7 @@ A tiny one-off static file server that can be used as an alternative to Python's
 
 Install
 -------
-Pre-built binaries haven't been made available yet but if you have [Rust](https://rust-lang.org), you can do `cargo install --git git://github.com/veeableful/tin`.
+Pre-built binaries haven't been made available yet but if you have [Rust](https://rust-lang.org), you can get it from crates.io via `cargo install tin`.
 
 Usage
 -----
