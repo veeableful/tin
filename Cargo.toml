@@ -1,12 +1,11 @@
 [package]
 name = "tin"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["Lilis Iskandar <veeableful@gmail.com>"]
 description = "A tiny one-off static file server that can be used as an alternative to Python's SimpleHTTPServer or http.server."
 license = "GPL-2.0"
 
 [dependencies]
 getopts = "0.2.14"
-iron = "0.2.6"
-staticfile = "0.1.0"
-time = "0.1.34"
+iron = "0.3.0"
+staticfile = "0.2.0"

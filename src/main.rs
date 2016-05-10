@@ -1,7 +1,6 @@
 extern crate getopts;
 extern crate iron;
 extern crate staticfile;
-extern crate time;
 
 use std::env;
 use std::path::Path;
@@ -9,24 +8,26 @@ use getopts::Options;
 use iron::prelude::*;
 use iron::{BeforeMiddleware, AfterMiddleware, typemap};
 use staticfile::Static;
-use time::precise_time_ns;
+use std::time::Instant;
 
 struct ResponseTime;
 
-impl typemap::Key for ResponseTime { type Value = u64; }
+impl typemap::Key for ResponseTime { type Value = Instant; }
 
 impl BeforeMiddleware for ResponseTime {
 	fn before(&self, req: &mut Request) -> IronResult<()> {
-		req.extensions.insert::<ResponseTime>(precise_time_ns());
+		req.extensions.insert::<ResponseTime>(Instant::now());
 		Ok(())
 	}
 }
 
 impl AfterMiddleware for ResponseTime {
 	fn after(&self, req: &mut Request, res: Response) -> IronResult<Response> {
-		let delta = precise_time_ns() - *req.extensions.get::<ResponseTime>().unwrap();
-		println!("{} /{} took: {:.3} ms", req.method, req.url.path.join("/"), (delta as f64) * 0.000001);
-		req.extensions.insert::<ResponseTime>(precise_time_ns());
+		let delta = req.extensions.get::<ResponseTime>().unwrap().elapsed();
+		let secs = delta.as_secs() as u64;
+		let nanos = delta.subsec_nanos() as u64;
+		let millis = secs * 1000 + nanos / 1000000;
+		println!("{} /{} took: {:.3} ms", req.method, req.url.path.join("/"), millis);
 		Ok(res)
 	}
 }
