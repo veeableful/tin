@@ -1,4 +1,4 @@
-Tin
+Tin [![Build Status](https://travis-ci.org/veeableful/tin.svg?branch=master)](https://travis-ci.org/veeableful/tin)
 ===
 A tiny one-off static file server that can be used as an alternative to Python's `SimpleHTTPServer` or `http.server`.
 
