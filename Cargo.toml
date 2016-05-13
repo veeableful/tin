@@ -4,6 +4,7 @@ version = "0.0.3"
 authors = ["Lilis Iskandar <veeableful@gmail.com>"]
 description = "A tiny one-off static file server that can be used as an alternative to Python's SimpleHTTPServer or http.server."
 license = "GPL-2.0"
+repository = "https://github.com/veeableful/tin"
 
 [dependencies]
 getopts = "0.2.14"
