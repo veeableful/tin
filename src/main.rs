@@ -26,10 +26,26 @@ impl AfterMiddleware for ResponseTime {
 		let delta = req.extensions.get::<ResponseTime>().unwrap().elapsed();
 		let secs = delta.as_secs() as u64;
 		let nanos = delta.subsec_nanos() as u64;
-		let millis = secs * 1000 + nanos / 1000000;
-		println!("{} /{} took: {:.3} ms", req.method, req.url.path.join("/"), millis);
+		let elapsed_ns = secs * 1_000_000_000 + nanos;
+		let (elapsed, unit) = to_number_and_unit(elapsed_ns);
+		println!("{} /{} took: {:.3} {}", req.method, req.url.path.join("/"), elapsed, unit);
 		Ok(res)
 	}
+}
+
+static UNITS: [&'static str; 4] = [ "ns", "μs", "ms", "s" ];
+
+fn to_number_and_unit(mut elapsed: u64) -> (u64, &'static str) {
+    let mut unit_index = 0;
+
+    while elapsed >= 1_000 {
+        elapsed /= 1_000;
+        if unit_index < UNITS.len() - 1 {
+            unit_index += 1;
+        }
+    }
+
+    (elapsed, &UNITS[unit_index])
 }
 
 fn print_usage(program: &str, opts: Options) {
