@@ -55,15 +55,15 @@ fn print_usage(program: &str, opts: Options) {
 
 fn serve_at(dir: &str, port: u16, time_response: bool) {
 	let static_handler = Static::new(Path::new(dir));
-	println!("Serving at localhost:{}", port);
+	println!("Serving at 0.0.0.0:{}", port);
 
 	if time_response {
 		let mut chain = Chain::new(static_handler);
 		chain.link_before(ResponseTime);
 		chain.link_after(ResponseTime);
-		Iron::new(chain).http(("localhost", port)).unwrap();
+		Iron::new(chain).http(("0.0.0.0", port)).unwrap();
 	} else {
-		Iron::new(static_handler).http(("localhost", port)).unwrap();
+		Iron::new(static_handler).http(("0.0.0.0", port)).unwrap();
 	}
 }
 
